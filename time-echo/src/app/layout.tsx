@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "时光回声 · TimeEcho",
-  description: "写给未来自己的信，AI 帮你生成回信——同时让你发现：原来别人也在问同样的问题。",
+  title: "时光回声 · TimeEcho — From Me to We",
+  description: "写给未来自己的信 + 匿名倾诉树洞。AI 生成回信，让你发现：原来别人也在问同样的问题。From Me to We。",
 };
 
 export const viewport: Viewport = {
