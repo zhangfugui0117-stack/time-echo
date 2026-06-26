@@ -18,88 +18,144 @@ const echoLibrary = [
   { id: "echo_12", question: "在大城市待不下去了", reply: "我坚持了两年半，然后回了老家附近的城市。不丢人。你知道最讽刺的是什么吗？回去之后才发现，当初让我离开的那些问题，换了地方依然存在——问题不在城市，在我自己。", tags: ["城市", "归属感", "压力"] },
 ];
 
-// ── 树洞预置语料 ──
-const treeholeSeeds = [
+// ── 共鸣墙预置故事 ──
+const wallStories = [
   {
-    id: "th_01",
+    id: "wall_01",
     emoji: "🏠",
     name: "匿名旅人",
     time: "2小时前",
-    content: "每天醒来第一个念头就是不想上班，但又不敢辞职。三年了，还是这样。",
-    replies: [
-      { role: "知心朋友", name: "小暖", emoji: "🌸", reply: "我特别理解你。'不想上班'不是懒，是对现状的一种本能抗拒。你坚持了三年，说明你比想象中更有韧性。" },
-      { role: "过来人", name: "老陈", emoji: "🧭", reply: "我也犹豫了三年。后来发现原地踏步本身就是一种选择——选择了忍受。早点做决定吧，不管选哪条路都比耗着强。" },
-      { role: "安慰者", name: "月月", emoji: "🌙", reply: "你已经很勇敢了。能坚持三年本身就是勇气，很多人连承认'我不想上班'都不敢。" },
-    ],
+    confession: "每天醒来第一个念头就是不想上班，但又不敢辞职。三年了，还是这样。",
+    reflection: "后来我终于辞职了。不是冲动，是攒够了勇气。辞职那天我在出租屋里大哭了一场——不是伤心，是终于松了一口气。现在做自由设计，钱少一半但人活过来了。",
+    tags: ["职业", "勇气", "选择"],
   },
   {
-    id: "th_02",
+    id: "wall_02",
     emoji: "📚",
     name: "匿名书虫",
     time: "5小时前",
-    content: "考研考了两次还是没上岸，不知道要不要再试一次。",
-    replies: [
-      { role: "知心朋友", name: "小暖", emoji: "🌸", reply: "两次都没上岸真的很沮丧吧。但你的努力不会白费，即使结果不是你想要的，那些学到的东西都在你身上。" },
-      { role: "过来人", name: "老陈", emoji: "🧭", reply: "我考了三次才上岸。但如果第三次还是没考上我会换路。不是放弃，是换一种方式到达。有时候绕路反而更快。" },
-      { role: "安慰者", name: "月月", emoji: "🌙", reply: "你已经在努力了，这就够了。给自己一个拥抱，你值得。" },
-    ],
+    confession: "考研考了两次还是没上岸，不知道要不要再试一次。",
+    reflection: "第三次没考上之后我决定不再考了。不是放弃，是发现原来我考研是因为不知道自己想做什么。现在在做自媒体，虽然收入不稳定，但至少每天有方向。",
+    tags: ["学业", "选择", "方向"],
   },
   {
-    id: "th_03",
+    id: "wall_03",
     emoji: "🫂",
     name: "匿名守望者",
     time: "昨天",
-    content: "和最好的朋友渐行渐远了。不是吵架，就是慢慢不再联系。心里很难受但又不知道该说什么。",
-    replies: [
-      { role: "知心朋友", name: "小暖", emoji: "🌸", reply: "最难受的分离就是这样悄无声息的。不是吵架，只是慢慢不再联系。你心里一定有很多话想对TA说。" },
-      { role: "过来人", name: "老陈", emoji: "🧭", reply: "后来我发现，有些友情就是有保质期的。不是谁做错了什么，是各自的轨道不同了。真正留下的朋友，不需要你刻意维护。" },
-      { role: "安慰者", name: "月月", emoji: "🌙", reply: "那段美好的回忆不会消失，它们永远属于你。即使人不在身边，那些一起笑过的日子仍然温暖着你。" },
-    ],
+    confession: "和最好的朋友渐行渐远了。不是吵架，就是慢慢不再联系。心里很难受但又不知道该说什么。",
+    reflection: "我鼓起勇气给TA发了条消息：'最近好吗？' TA秒回了。原来TA也在等我开口。有些关系不是淡了，是双方都在等对方先迈一步。",
+    tags: ["友情", "沟通", "孤独"],
   },
   {
-    id: "th_04",
+    id: "wall_04",
     emoji: "🌊",
     name: "匿名漂泊者",
     time: "3天前",
-    content: "在大城市漂着找不到归属感。每天都是人潮中的孤岛。",
-    replies: [
-      { role: "知心朋友", name: "小暖", emoji: "🌸", reply: "人潮中的孤岛——我懂这种感觉。在一个充满人的地方却觉得自己是最透明的那一个。" },
-      { role: "过来人", name: "老陈", emoji: "🧭", reply: "归属感不是城市给的，是自己给的。后来我在出租屋里养了一盆绿植、买了喜欢的毯子，那种'这里是我的角落'的感觉就慢慢来了。" },
-      { role: "安慰者", name: "月月", emoji: "🌙", reply: "你正在建立属于自己的生活。每一步都在扎根，只是根还没长到你能感受到的程度。" },
-    ],
+    confession: "在大城市漂着找不到归属感。每天都是人潮中的孤岛。",
+    reflection: "后来我在出租屋里养了一盆绿植，买了喜欢的毯子，冰箱里常备啤酒。那种'这是我的角落'的感觉慢慢就来了。归属感不是城市给的，是自己给自己的。",
+    tags: ["城市", "归属感", "孤独"],
   },
   {
-    id: "th_05",
+    id: "wall_05",
     emoji: "💫",
     name: "匿名星尘",
     time: "一周前",
-    content: "觉得自己永远不够好，不管怎么做都差一点。",
-    replies: [
-      { role: "知心朋友", name: "小暖", emoji: "🌸", reply: "你说的'差一点'其实说明你已经很接近了。那个'一点'不是你的缺陷，是成长的空间。" },
-      { role: "过来人", name: "老陈", emoji: "🧭", reply: "后来我发现'不够好'是个错觉。我们总拿自己跟最厉害的人比，但忘了那些人也觉得自己不够好。标准是别人的，生活是自己的。" },
-      { role: "安慰者", name: "月月", emoji: "🌙", reply: "你已经很好了，只是你自己暂时看不到。就像鱼不知道自己会游泳一样。给自己一点耐心。" },
-    ],
+    confession: "觉得自己永远不够好，不管怎么做都差一点。",
+    reflection: "后来我发现'不够好'是个错觉。我总拿自己跟最厉害的人比，但忘了那些人也觉得自己不够好。标准是别人的，生活是自己的。承认'我还在路上'比假装'我已经到了'更勇敢。",
+    tags: ["自我", "自信", "接纳"],
+  },
+  {
+    id: "wall_06",
+    emoji: "🌙",
+    name: "匿名夜行者",
+    time: "一周前",
+    confession: "分手半年了还是走不出来，觉得自己很没用。",
+    reflection: "一年后回头看，那段走不出来的日子其实是我重新认识自己的开始。不是走不出来，是不敢走出来——因为我把所有安全感都寄托在另一个人身上。现在学会了一个人也OK。",
+    tags: ["感情", "失恋", "成长"],
+  },
+  {
+    id: "wall_07",
+    emoji: "🔥",
+    name: "匿名燃者",
+    time: "2周前",
+    confession: "工作三年了还是不喜欢这个行业，但又怕转行从头开始太晚了。",
+    reflection: "转行了。工资降了一半但人活过来了。以前觉得'稳定'最重要，后来发现每天睁眼不想上班才是最大的不稳定。26岁转行不算晚，36岁也不算晚——只要你还活着，就不晚。",
+    tags: ["职业", "转行", "选择"],
+  },
+  {
+    id: "wall_08",
+    emoji: "🧩",
+    name: "匿名拼图",
+    time: "3周前",
+    confession: "不知道自己到底适合什么，什么都做不好。",
+    reflection: "花了两年试了四份工作才找到方向。每一份都'做不好'，但每一份都让我更了解自己：我不擅长什么，我讨厌什么，我真正在意什么。做不好不是失败，是在缩小搜索范围。",
+    tags: ["自我", "方向", "迷茫"],
   },
 ];
 
-// ── 回声匹配 ──
+// ── 共鸣匹配 ──
+function matchWallStories(userInput: string, count = 3) {
+  const keywords: Record<string, string[]> = {
+    毕业: ["选择", "职业", "学业"],
+    回家: ["选择", "城市", "家庭"],
+    迷茫: ["方向", "自我", "迷茫"],
+    喜欢: ["方向", "自我", "热爱"],
+    父母: ["家庭", "沟通"],
+    休学: ["学业", "选择"],
+    分手: ["感情", "失恋", "成长"],
+    感情: ["感情", "失恋"],
+    工作: ["职业", "选择", "转行"],
+    考研: ["学业", "选择", "方向"],
+    意义: ["存在感", "意义", "人生"],
+    不够好: ["自我", "自信", "接纳"],
+    大城市: ["城市", "归属感", "孤独"],
+    压力: ["压力", "焦虑", "职业"],
+    孤独: ["孤独", "友情", "沟通"],
+    辞职: ["职业", "勇气", "选择"],
+    转行: ["职业", "转行", "选择"],
+    朋友: ["友情", "沟通", "孤独"],
+    爱情: ["感情", "失恋"],
+    勇气: ["勇气", "选择"],
+  };
+
+  const scored = wallStories.map((story) => {
+    let score = 0;
+    const input = userInput.toLowerCase();
+    for (const tag of story.tags) {
+      if (input.includes(tag)) score += 3;
+    }
+    for (const [kw, related] of Object.entries(keywords)) {
+      if (input.includes(kw)) {
+        if (story.tags.some((t) => related.includes(t))) score += 2;
+      }
+    }
+    // 随机因子，避免每次匹配完全一样
+    score += Math.random() * 0.5;
+    return { ...story, _score: score };
+  });
+
+  return scored.sort((a, b) => b._score - a._score).slice(0, count).map(({ _score, ...rest }) => rest);
+}
+
+// ── 回声匹配（给未来的自己模块） ──
 function matchEchoes(userInput: string, count = 3) {
   const keywords: Record<string, string[]> = {
-    毕业: ["毕业", "工作", "职业", "选择"],
-    回家: ["回家", "老家", "城市", "选择"],
-    迷茫: ["迷茫", "方向", "自我", "不确定"],
-    喜欢: ["喜欢", "热爱", "方向", "自我"],
-    父母: ["父母", "家庭", "关系", "沟通"],
-    休学: ["休学", "学业", "选择"],
-    分手: ["分手", "感情", "失恋"],
-    感情: ["分手", "感情", "恋爱", "表白"],
-    工作: ["工作", "职业", "转行", "选择"],
-    考研: ["考研", "学业", "选择"],
-    意义: ["意义", "存在感", "活着"],
-    不够好: ["不够好", "自我", "自信", "接纳"],
-    大城市: ["大城市", "城市", "归属感", "压力"],
-    压力: ["大城市", "压力", "焦虑"],
-    孤独: ["孤独", "关系", "连接"],
+    毕业: ["职业", "家庭", "选择"],
+    回家: ["城市", "选择"],
+    迷茫: ["自我", "方向", "迷茫"],
+    喜欢: ["方向", "自我"],
+    父母: ["家庭", "沟通", "孤独"],
+    休学: ["学业", "选择"],
+    分手: ["感情", "失恋"],
+    感情: ["感情", "恋爱", "表白"],
+    工作: ["职业", "转行", "选择"],
+    考研: ["学业", "选择"],
+    意义: ["存在感", "意义", "人生"],
+    不够好: ["自我", "自信", "接纳"],
+    大城市: ["城市", "归属感", "压力"],
+    压力: ["压力", "焦虑"],
+    孤独: ["孤独", "关系"],
   };
 
   const scored = echoLibrary.map((echo) => {
@@ -134,11 +190,11 @@ async function fetchFutureReply(message: string, years: number) {
   return response.json();
 }
 
-async function fetchTreeholeReplies(message: string) {
-  const response = await fetch("/api/treehole", {
+async function fetchResonance(userInput: string, matchedStories: string) {
+  const response = await fetch("/api/resonance", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message }),
+    body: JSON.stringify({ userInput, matchedStories }),
   });
   if (!response.ok) {
     const data = await response.json().catch(() => ({}));
@@ -215,18 +271,11 @@ function Particles() {
   );
 }
 
-// ── 听者角色颜色映射 ──
-const roleColors: Record<string, { bg: string; border: string; text: string; accent: string }> = {
-  "知心朋友": { bg: "bg-pink-500/8", border: "border-pink-300/20", text: "text-pink-200/80", accent: "#ec4899" },
-  "过来人": { bg: "bg-amber-500/8", border: "border-amber-300/20", text: "text-amber-200/80", accent: "#f59e0b" },
-  "安慰者": { bg: "bg-violet-500/8", border: "border-violet-300/20", text: "text-violet-200/80", accent: "#8b5cf6" },
-};
-
 // ══════════════════════════════════════
 // ── 主页面 ──
 // ══════════════════════════════════════
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"future" | "treehole">("future");
+  const [activeTab, setActiveTab] = useState<"future" | "wall">("future");
 
   // ── 给未来的自己 module state ──
   const [message, setMessage] = useState("");
@@ -242,12 +291,13 @@ export default function Home() {
 
   const { displayedText, isTyping, isDone, startTyping } = useTypewriter(35);
 
-  // ── 树洞 module state ──
-  const [treeholeInput, setTreeholeInput] = useState("");
-  const [treeholePhase, setTreeholePhase] = useState<"feed" | "writing" | "loading" | "replies">("feed");
-  const [treeholeReplies, setTreeholeReplies] = useState<Array<{ role: string; name: string; emoji: string; reply: string }> | null>(null);
-  const [treeholeError, setTreeholeError] = useState("");
-  const [userPosts, setUserPosts] = useState<Array<any>>([]);
+  // ── 共鸣墙 module state ──
+  const [wallInput, setWallInput] = useState("");
+  const [wallPhase, setWallPhase] = useState<"wall" | "writing" | "loading" | "resonance">("wall");
+  const [matchedStories, setMatchedStories] = useState<Array<typeof wallStories[0]> | null>(null);
+  const [resonanceMsg, setResonanceMsg] = useState("");
+  const [wallError, setWallError] = useState("");
+  const [userWallPosts, setUserWallPosts] = useState<Array<any>>([]);
 
   // ── 给未来的自己：提交处理 ──
   async function handleFutureSubmit() {
@@ -274,42 +324,57 @@ export default function Home() {
     }
   }, [futurePhase, isDone, result]);
 
-  // ── 树洞：提交倾诉 ──
-  async function handleTreeholeSubmit() {
-    if (!treeholeInput.trim()) return;
-    setTreeholeError("");
-    setTreeholePhase("loading");
+  // ── 共鸣墙：提交倾诉 ──
+  async function handleWallSubmit() {
+    if (!wallInput.trim()) return;
+    setWallError("");
+    setWallPhase("loading");
+
+    // 匹配相似故事
+    const matched = matchWallStories(wallInput, 3);
+    setMatchedStories(matched);
+
+    // 尝试调用 AI 生成共鸣解读
     try {
-      const data = await fetchTreeholeReplies(treeholeInput);
-      setTreeholeReplies(data.replies);
-      setTreeholePhase("replies");
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : "网络出了点问题";
-      setTreeholeError(msg);
-      setTreeholePhase("writing");
+      const storiesText = matched.map(s => `${s.confession} → ${s.reflection}`).join("\n\n");
+      const data = await fetchResonance(wallInput, storiesText);
+      setResonanceMsg(data.resonance);
+    } catch {
+      // fallback：本地生成共鸣解读
+      setResonanceMsg(generateLocalResonance(wallInput, matched));
     }
+    setWallPhase("resonance");
   }
 
-  // ── 树洞：回到 feed ──
-  function backToFeed() {
-    if (treeholeReplies && treeholeInput) {
-      // 把用户帖子加入 feed
-      setUserPosts((prev) => [
+  // ── 本地共鸣解读 fallback ──
+  function generateLocalResonance(input: string, matched: Array<typeof wallStories[0]>): string {
+    const tags = matched.flatMap(s => s.tags);
+    const uniqueTags = [...new Set(tags)].slice(0, 3);
+    const tagStr = uniqueTags.map(t => `#${t}`).join(" ");
+    return `你此刻的感受，关于${uniqueTags[0] || "人生"}的困惑——墙上那些纸条里，有人写过几乎相同的话。\n\n他们后来走了不同的路，但都从同一个起点出发。看看他们的后来，也许你会看到自己可能的未来。\n\n${tagStr}`;
+  }
+
+  // ── 共鸣墙：回到墙 ──
+  function backToWall() {
+    if (matchedStories && wallInput) {
+      setUserWallPosts((prev) => [
         {
           id: `user_${Date.now()}`,
           emoji: "✨",
           name: "匿名倾诉者",
           time: "刚刚",
-          content: treeholeInput,
-          replies: treeholeReplies,
+          confession: wallInput,
+          reflection: resonanceMsg,
+          tags: matchedStories.flatMap(s => s.tags).slice(0, 3),
         },
         ...prev,
       ]);
     }
-    setTreeholeInput("");
-    setTreeholeReplies(null);
-    setTreeholeError("");
-    setTreeholePhase("feed");
+    setWallInput("");
+    setMatchedStories(null);
+    setResonanceMsg("");
+    setWallError("");
+    setWallPhase("wall");
   }
 
   // ── 封存时间胶囊 ──
@@ -335,8 +400,8 @@ export default function Home() {
     setCapsuleSealed(false);
   }
 
-  // ── 所有帖子（预置 + 用户） ──
-  const allTreeholePosts = [...userPosts, ...treeholeSeeds];
+  // ── 所有墙帖（预置 + 用户） ──
+  const allWallPosts = [...userWallPosts, ...wallStories];
 
   return (
     <div className="relative min-h-screen flex flex-col items-center px-5 py-8 md:py-14">
@@ -367,7 +432,7 @@ export default function Home() {
         {/* ── Tab 切换器 ── */}
         <div className="w-full mb-6 flex gap-3 p-1 rounded-2xl bg-white/[0.04] border border-white/[0.06]">
           <button
-            onClick={() => { setActiveTab("future"); setFuturePhase("input"); setTreeholePhase("feed"); }}
+            onClick={() => { setActiveTab("future"); setFuturePhase("input"); setWallPhase("wall"); }}
             className={`flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-300 ${
               activeTab === "future"
                 ? "bg-gradient-to-r from-pink-500/20 to-violet-500/15 border border-pink-400/30 text-pink-200 shadow-lg shadow-pink-500/10"
@@ -377,14 +442,14 @@ export default function Home() {
             ✦ 给未来的自己
           </button>
           <button
-            onClick={() => { setActiveTab("treehole"); setTreeholePhase("feed"); setFuturePhase("input"); }}
+            onClick={() => { setActiveTab("wall"); setWallPhase("wall"); setFuturePhase("input"); }}
             className={`flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-300 ${
-              activeTab === "treehole"
+              activeTab === "wall"
                 ? "bg-gradient-to-r from-emerald-500/20 to-cyan-500/15 border border-emerald-400/30 text-emerald-200 shadow-lg shadow-emerald-500/10"
                 : "text-white/35 hover:text-white/55 hover:bg-white/[0.04]"
             }`}
           >
-            🌳 树洞
+            🌳 共鸣墙
           </button>
         </div>
 
@@ -618,76 +683,69 @@ export default function Home() {
         )}
 
         {/* ════════════════════════════════ */}
-        {/* ── Module 2: 树洞 ── */}
+        {/* ── Module 2: 共鸣墙 ── */}
         {/* ════════════════════════════════ */}
-        {activeTab === "treehole" && (
+        {activeTab === "wall" && (
           <>
-            {/* ── 树洞 Feed ── */}
-            {treeholePhase === "feed" && (
+            {/* ── 共鸣墙 Feed ── */}
+            {wallPhase === "wall" && (
               <section className="w-full animate-[fadeIn_0.6s_ease]">
                 <div className="text-center mb-6">
-                  <h2 className="text-2xl font-bold gradient-text font-serif mb-2">🌳 树洞</h2>
+                  <h2 className="text-2xl font-bold gradient-text font-serif mb-2">🌳 共鸣墙</h2>
                   <p className="text-sm text-white/30 font-sans">
-                    匿名倾诉你的烦恼，所有人都能倾听并即时回信
+                    每张纸条都是一个人的真实经历 · 你不是第一个走到这里的人
                   </p>
                 </div>
 
                 {/* 倾诉按钮 */}
                 <button
-                  onClick={() => setTreeholePhase("writing")}
+                  onClick={() => setWallPhase("writing")}
                   className="send-btn w-full py-3.5 text-base mb-6"
                 >
-                  我想说点什么 🌳
+                  贴一张纸条 📝
                 </button>
 
-                {/* 帖子列表 */}
+                {/* 纸条墙 */}
                 <div className="grid gap-4">
-                  {allTreeholePosts.map((post, i) => (
+                  {allWallPosts.map((post, i) => (
                     <div
                       key={post.id}
                       className="glass-card p-5 echo-card"
                       style={{ animationDelay: `${i * 0.1}s` }}
                     >
-                      {/* 帖子头部 */}
+                      {/* 纸条头部 */}
                       <div className="flex items-center gap-2.5 mb-3">
                         <span className="text-lg">{post.emoji}</span>
                         <span className="text-xs text-white/40 font-sans">{post.name}</span>
                         <span className="text-xs text-white/20 font-sans">· {post.time}</span>
                       </div>
 
-                      {/* 帖子内容 */}
-                      <p className="text-sm text-white/70 font-sans leading-relaxed mb-4">
-                        {post.content}
+                      {/* 当时的心声 */}
+                      <p className="text-sm text-white/60 font-sans leading-relaxed italic mb-3">
+                        &ldquo;{post.confession}&rdquo;
                       </p>
 
-                      {/* 回信列表 */}
-                      {post.replies && post.replies.length > 0 && (
-                        <div className="grid gap-2.5 mt-3 pt-3 border-t border-white/5">
-                          {post.replies.map((reply: any, j: number) => {
-                            const colors = roleColors[reply.role] || roleColors["知心朋友"];
-                            return (
-                              <div
-                                key={j}
-                                className={`p-3.5 rounded-xl ${colors.bg} border ${colors.border}`}
-                                style={{ animationDelay: `${(i * 0.1) + (j * 0.08)}s` }}
-                              >
-                                <div className="flex items-center gap-2 mb-2">
-                                  <span className="text-sm">{reply.emoji}</span>
-                                  <span className={`text-xs ${colors.text} font-sans`}>
-                                    {reply.name}
-                                  </span>
-                                  <span className="text-xs text-white/20 font-sans">
-                                    · {reply.role}
-                                  </span>
-                                </div>
-                                <p className={`text-sm ${colors.text} font-sans leading-relaxed opacity-90`}>
-                                  {reply.reply}
-                                </p>
-                              </div>
-                            );
-                          })}
+                      {/* 后来发生的事 */}
+                      {post.reflection && (
+                        <div className="mt-2 p-3 rounded-xl bg-emerald-500/[0.06] border border-emerald-400/10">
+                          <p className="text-xs text-emerald-300/40 mb-1.5 font-sans">后来的TA：</p>
+                          <p className="text-sm text-emerald-200/60 font-sans leading-relaxed">
+                            {post.reflection}
+                          </p>
                         </div>
                       )}
+
+                      {/* 标签 */}
+                      <div className="mt-3 flex gap-1.5 flex-wrap">
+                        {post.tags.map((tag: string) => (
+                          <span
+                            key={tag}
+                            className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/8 text-emerald-300/40 font-sans"
+                          >
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -698,127 +756,149 @@ export default function Home() {
               </section>
             )}
 
-            {/* ── 树洞：写倾诉 ── */}
-            {treeholePhase === "writing" && (
+            {/* ── 共鸣墙：写纸条 ── */}
+            {wallPhase === "writing" && (
               <section className="w-full animate-[fadeIn_0.6s_ease]">
                 <div className="glass-card p-6 md:p-8">
                   <div className="flex items-center gap-2 mb-4">
-                    <span className="text-lg">🌳</span>
-                    <h3 className="text-sm text-white/50 font-serif">匿名倾诉</h3>
+                    <span className="text-lg">📝</span>
+                    <h3 className="text-sm text-white/50 font-serif">贴一张纸条到墙上</h3>
                   </div>
                   <p className="text-xs text-white/25 mb-4 font-sans leading-relaxed">
-                    写下你的烦恼，三位倾听者会即时回复你。完全匿名，没有人知道你是谁。
+                    写下你此刻的困惑或感受。墙上有很多人写过类似的话——你贴上之后，会看到他们也走过这条路，以及后来发生了什么。
                   </p>
 
-                  {treeholeError && (
+                  {wallError && (
                     <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-sm text-red-300/80 text-center">
-                      {treeholeError}
+                      {wallError}
                     </div>
                   )}
 
                   <textarea
-                    value={treeholeInput}
-                    onChange={(e) => setTreeholeInput(e.target.value)}
+                    value={wallInput}
+                    onChange={(e) => setWallInput(e.target.value)}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" && !e.shiftKey) {
                         e.preventDefault();
-                        handleTreeholeSubmit();
+                        handleWallSubmit();
                       }
                     }}
-                    placeholder={"写下你的烦恼...\n\n比如：最近工作压力太大了，每天都想辞职"}
+                    placeholder={"写下此刻的感受...\n\n比如：最近工作压力太大了，每天都想辞职"}
                     className="letter-input w-full h-32 p-4 text-base leading-relaxed text-white/90 placeholder-white/20 resize-none font-sans"
                     autoFocus
                   />
 
                   <button
-                    onClick={handleTreeholeSubmit}
-                    disabled={!treeholeInput.trim()}
+                    onClick={handleWallSubmit}
+                    disabled={!wallInput.trim()}
                     className="send-btn mt-5 w-full py-3.5 text-base"
                   >
-                    倾诉 🌳
+                    贴上去 🌳
                   </button>
 
                   <button
                     onClick={() => {
-                      setTreeholeInput("");
-                      setTreeholeError("");
-                      setTreeholePhase("feed");
+                      setWallInput("");
+                      setWallError("");
+                      setWallPhase("wall");
                     }}
                     className="mt-3 w-full py-2.5 rounded-xl bg-white/5 border border-white/8 text-white/30 hover:text-white/50 text-xs font-sans transition-all"
                   >
-                    ← 回到树洞
+                    ← 回到共鸣墙
                   </button>
                 </div>
               </section>
             )}
 
-            {/* ── 树洞：Loading ── */}
-            {treeholePhase === "loading" && (
+            {/* ── 共鸣墙：Loading ── */}
+            {wallPhase === "loading" && (
               <section className="w-full text-center py-24 animate-[fadeIn_0.4s_ease]">
                 <div className="loading-orb mx-auto mb-6" />
-                <p className="text-white/50 text-sm font-sans">倾听者们正在阅读...</p>
-                <p className="text-white/20 text-xs mt-2 font-sans">三位倾听者正在准备他们的回信</p>
+                <p className="text-white/50 text-sm font-sans">在墙上寻找共鸣...</p>
+                <p className="text-white/20 text-xs mt-2 font-sans">有人在相似的地方留下过纸条</p>
               </section>
             )}
 
-            {/* ── 树洞：回复展示 ── */}
-            {treeholePhase === "replies" && treeholeReplies && (
+            {/* ── 共鸣墙：共鸣展示 ── */}
+            {wallPhase === "resonance" && matchedStories && (
               <section className="w-full animate-[fadeIn_0.6s_ease]">
                 {/* 用户原始倾诉 */}
-                <div className="glass-card p-5 mb-4">
+                <div className="glass-card p-5 mb-5">
                   <div className="flex items-center gap-2.5 mb-3">
                     <span className="text-lg">✨</span>
-                    <span className="text-xs text-white/40 font-sans">你的倾诉</span>
+                    <span className="text-xs text-white/40 font-sans">你的纸条</span>
                   </div>
-                  <p className="text-sm text-white/70 font-sans leading-relaxed">
-                    {treeholeInput}
+                  <p className="text-sm text-white/70 font-sans leading-relaxed italic">
+                    &ldquo;{wallInput}&rdquo;
                   </p>
                 </div>
+
+                {/* 共鸣解读 */}
+                {resonanceMsg && (
+                  <div className="mb-5 p-4 rounded-xl bg-emerald-500/[0.08] border border-emerald-400/15 text-center animate-[fadeIn_0.8s_ease]">
+                    <p className="text-sm text-emerald-200/70 font-sans leading-relaxed whitespace-pre-line">
+                      {resonanceMsg}
+                    </p>
+                  </div>
+                )}
 
                 {/* 分割线 */}
                 <div className="text-center mb-5 relative">
                   <div className="absolute inset-x-0 top-1/2 h-px divider-line" />
                   <span className="relative inline-block bg-[#0c0a14] px-5 py-1.5 text-sm text-white/30 font-sans">
-                    三位倾听者的回信
+                    他们也走过这条路
                   </span>
                 </div>
 
-                {/* 回信卡片 */}
-                <div className="grid gap-3.5">
-                  {treeholeReplies.map((reply, i) => {
-                    const colors = roleColors[reply.role] || roleColors["知心朋友"];
-                    return (
-                      <div
-                        key={i}
-                        className="echo-card p-4 rounded-xl glass-card"
-                        style={{ animationDelay: `${i * 0.2}s` }}
-                      >
-                        <div className="flex items-center gap-2.5 mb-3">
-                          <span
-                            className="w-8 h-8 rounded-full flex items-center justify-center text-sm"
-                            style={{ background: `${colors.accent}20`, border: `1px solid ${colors.accent}40` }}
-                          >
-                            {reply.emoji}
-                          </span>
-                          <div>
-                            <span className={`text-sm ${colors.text} font-sans block`}>{reply.name}</span>
-                            <span className="text-xs text-white/20 font-sans">{reply.role}</span>
-                          </div>
-                        </div>
-                        <p className={`text-sm ${colors.text} font-sans leading-relaxed opacity-90`}>
-                          {reply.reply}
+                {/* 匹配的故事卡片 */}
+                <div className="grid gap-4">
+                  {matchedStories.map((story, i) => (
+                    <div
+                      key={story.id}
+                      className="glass-card p-5 echo-card"
+                      style={{ animationDelay: `${i * 0.2}s` }}
+                    >
+                      {/* 故事头部 */}
+                      <div className="flex items-center gap-2.5 mb-3">
+                        <span className="text-lg">{story.emoji}</span>
+                        <span className="text-xs text-white/40 font-sans">{story.name}</span>
+                        <span className="text-xs text-white/20 font-sans">· {story.time}</span>
+                      </div>
+
+                      {/* 当时的困惑 */}
+                      <p className="text-sm text-white/60 font-sans leading-relaxed italic mb-3">
+                        &ldquo;{story.confession}&rdquo;
+                      </p>
+
+                      {/* 后来发生的事 */}
+                      <div className="mt-2 p-3 rounded-xl bg-emerald-500/[0.06] border border-emerald-400/10">
+                        <p className="text-xs text-emerald-300/40 mb-1.5 font-sans">后来的TA：</p>
+                        <p className="text-sm text-emerald-200/60 font-sans leading-relaxed">
+                          {story.reflection}
                         </p>
                       </div>
-                    );
-                  })}
+
+                      {/* 标签 */}
+                      <div className="mt-3 flex gap-1.5 flex-wrap">
+                        {story.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/8 text-emerald-300/40 font-sans"
+                          >
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
                 </div>
 
-                {/* 操作按钮 */}
+                {/* 回到墙 */}
                 <button
-                  onClick={backToFeed}
+                  onClick={backToWall}
                   className="mt-8 w-full py-3.5 rounded-2xl bg-white/5 border border-white/8 text-white/40 hover:text-white/70 hover:border-white/15 transition-all text-sm font-sans"
                 >
-                  回到树洞 → 你的倾诉将出现在树洞中
+                  回到共鸣墙 → 你的纸条将出现在墙上
                 </button>
               </section>
             )}
