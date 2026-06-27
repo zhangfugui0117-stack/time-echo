@@ -55,6 +55,29 @@ function matchEchoes(userInput: string, count = 3) {
   return scored.sort((a, b) => b._score - a._score).slice(0, count).map(({ _score, ...rest }) => rest);
 }
 
+// ── 清理 Pollinations AI 返回中的广告文案 ──
+function cleanPollinationsAd(text: string): string {
+  // 移除常见的 Pollinations 广告模式
+  const adPatterns = [
+    /\*\*Support Pollinations\.AI\.\*\*/gi,
+    /\*\*Ad\*\*/gi,
+    /Powered by Pollinations\.AI[^]*/gi,
+    /\[Support our mission\][^\)]*\)/gi,
+    /to keep AI accessible for everyone/gi,
+    /free text APIs/gi,
+    /---\n*\s*(\*\*Ad\*\*|\*\*Support)/gi,
+  ];
+
+  let cleaned = text;
+  for (const pattern of adPatterns) {
+    cleaned = cleaned.replace(pattern, "");
+  }
+
+  // 清理多余空行
+  cleaned = cleaned.replace(/\n{3,}/g, "\n\n").trim();
+  return cleaned;
+}
+
 // ── 调用 Pollinations AI 生成回信（完全免费，无需 API Key）──
 async function generateReplyWithAI(message: string, years: number): Promise<string> {
   const systemPrompt = `你是用户的"${years}年后的自己"。用户会写一句话给${years}年后的自己，你要以那个未来的自己的身份回信。
@@ -91,7 +114,7 @@ async function generateReplyWithAI(message: string, years: number): Promise<stri
         const text = await response.text();
         // Pollinations 直接返回纯文本
         if (text && text.length > 10 && !text.includes("error")) {
-          return text.trim();
+          return cleanPollinationsAd(text.trim());
         }
       }
 
