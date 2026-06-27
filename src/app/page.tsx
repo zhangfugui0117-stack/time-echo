@@ -240,37 +240,6 @@ function useTypewriter(speed = 35) {
   return { displayedText, isTyping, isDone, startTyping };
 }
 
-// ── 浮动粒子 ──
-function Particles() {
-  const particles = useRef(
-    Array.from({ length: 20 }, (_, i) => ({
-      id: i,
-      left: Math.random() * 100,
-      delay: Math.random() * 15,
-      duration: 15 + Math.random() * 20,
-      size: 1 + Math.random() * 3,
-    }))
-  );
-
-  return (
-    <div className="particles">
-      {particles.current.map((p) => (
-        <span
-          key={p.id}
-          className="particle"
-          style={{
-            left: `${p.left}%`,
-            animationDelay: `${p.delay}s`,
-            animationDuration: `${p.duration}s`,
-            width: `${p.size}px`,
-            height: `${p.size}px`,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
 // ══════════════════════════════════════
 // ── 主页面 ──
 // ══════════════════════════════════════
@@ -410,9 +379,7 @@ export default function Home() {
         <div className="aurora-orb aurora-orb-1" />
         <div className="aurora-orb aurora-orb-2" />
         <div className="aurora-orb aurora-orb-3" />
-        <div className="aurora-orb aurora-orb-4" />
       </div>
-      <Particles />
 
       {/* 主内容 */}
       <main className="relative z-10 w-full max-w-xl flex flex-col items-center">
@@ -523,7 +490,7 @@ export default function Home() {
             {/* ── Loading ── */}
             {futurePhase === "loading" && (
               <section className="w-full text-center py-24 animate-[fadeIn_0.4s_ease]">
-                <div className="loading-orb mx-auto mb-6" />
+                <div className="loading-spinner mx-auto mb-6" />
                 <p className="text-white/50 text-sm font-sans">未来的你正在读信...</p>
                 <p className="text-white/20 text-xs mt-2 font-sans">穿越时空需要一点时间</p>
               </section>
@@ -813,7 +780,7 @@ export default function Home() {
             {/* ── 共鸣墙：Loading ── */}
             {wallPhase === "loading" && (
               <section className="w-full text-center py-24 animate-[fadeIn_0.4s_ease]">
-                <div className="loading-orb mx-auto mb-6" />
+                <div className="loading-spinner mx-auto mb-6" />
                 <p className="text-white/50 text-sm font-sans">在墙上寻找共鸣...</p>
                 <p className="text-white/20 text-xs mt-2 font-sans">有人在相似的地方留下过纸条</p>
               </section>
