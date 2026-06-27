@@ -130,7 +130,6 @@ function matchWallStories(userInput: string, count = 3) {
         if (story.tags.some((t) => related.includes(t))) score += 2;
       }
     }
-    // 随机因子，避免每次匹配完全一样
     score += Math.random() * 0.5;
     return { ...story, _score: score };
   });
@@ -138,7 +137,7 @@ function matchWallStories(userInput: string, count = 3) {
   return scored.sort((a, b) => b._score - a._score).slice(0, count).map(({ _score, ...rest }) => rest);
 }
 
-// ── 回声匹配（给未来的自己模块） ──
+// ── 回声匹配 ──
 function matchEchoes(userInput: string, count = 3) {
   const keywords: Record<string, string[]> = {
     毕业: ["职业", "家庭", "选择"],
@@ -243,8 +242,10 @@ function useTypewriter(speed = 35) {
 // ══════════════════════════════════════
 // ── 主页面 ──
 // ══════════════════════════════════════
+type Module = "home" | "future" | "wall" | "treehole";
+
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"future" | "wall">("future");
+  const [activeModule, setActiveModule] = useState<Module>("home");
 
   // ── 给未来的自己 module state ──
   const [message, setMessage] = useState("");
@@ -267,6 +268,18 @@ export default function Home() {
   const [resonanceMsg, setResonanceMsg] = useState("");
   const [wallError, setWallError] = useState("");
   const [userWallPosts, setUserWallPosts] = useState<Array<any>>([]);
+
+  // ── 树洞 module state ──
+  const [treeholeInput, setTreeholeInput] = useState("");
+  const [treeholePhase, setTreeholePhase] = useState<"input" | "sealed">("input");
+  const [treeholeList, setTreeholeList] = useState<Array<{ id: string; content: string; time: string; emoji: string }>>([
+    { id: "th_01", content: "今天又是一个人吃饭，觉得好孤独", time: "1小时前", emoji: "🌑" },
+    { id: "th_02", content: "偷偷哭了一场，不想让室友听到", time: "3小时前", emoji: "💧" },
+    { id: "th_03", content: "其实我一直假装很开心，但心里空空的", time: "5小时前", emoji: "🎭" },
+    { id: "th_04", content: "想辞职又不敢，每天都在演没事", time: "昨天", emoji: "🏢" },
+    { id: "th_05", content: "爸妈问我好不好，我说好，其实不好", time: "昨天", emoji: "🫥" },
+    { id: "th_06", content: "社交恐惧又渴望被理解，好矛盾", time: "3天前", emoji: "🪞" },
+  ]);
 
   // ── 给未来的自己：提交处理 ──
   async function handleFutureSubmit() {
@@ -299,17 +312,14 @@ export default function Home() {
     setWallError("");
     setWallPhase("loading");
 
-    // 匹配相似故事
     const matched = matchWallStories(wallInput, 3);
     setMatchedStories(matched);
 
-    // 尝试调用 AI 生成共鸣解读
     try {
       const storiesText = matched.map(s => `${s.confession} → ${s.reflection}`).join("\n\n");
       const data = await fetchResonance(wallInput, storiesText);
       setResonanceMsg(data.resonance);
     } catch {
-      // fallback：本地生成共鸣解读
       setResonanceMsg(generateLocalResonance(wallInput, matched));
     }
     setWallPhase("resonance");
@@ -346,6 +356,22 @@ export default function Home() {
     setWallPhase("wall");
   }
 
+  // ── 树洞：提交 ──
+  function handleTreeholeSubmit() {
+    if (!treeholeInput.trim()) return;
+    const emojis = ["🌑", "💧", "🎭", "🫥", "🪞", "🕯️", "🌿", "☁️"];
+    setTreeholeList((prev) => [
+      {
+        id: `th_user_${Date.now()}`,
+        content: treeholeInput,
+        time: "刚刚",
+        emoji: emojis[Math.floor(Math.random() * emojis.length)],
+      },
+      ...prev,
+    ]);
+    setTreeholePhase("sealed");
+  }
+
   // ── 封存时间胶囊 ──
   function sealCapsule() {
     if (!capsuleEmail.trim()) return;
@@ -369,8 +395,13 @@ export default function Home() {
     setCapsuleSealed(false);
   }
 
-  // ── 所有墙帖（预置 + 用户） ──
+  // ── 所有墙帖 ──
   const allWallPosts = [...userWallPosts, ...wallStories];
+
+  // ── 返回首页 ──
+  function goHome() {
+    setActiveModule("home");
+  }
 
   return (
     <div className="relative min-h-screen flex flex-col items-center px-5 py-8 md:py-14">
@@ -384,7 +415,7 @@ export default function Home() {
       {/* 主内容 */}
       <main className="relative z-10 w-full max-w-xl flex flex-col items-center">
         {/* ── 标题区 ── */}
-        <header className="text-center mb-8 md:mb-12 animate-[fadeIn_0.8s_ease]">
+        <header className="text-center mb-8 md:mb-10 animate-[fadeIn_0.8s_ease]">
           <div className="inline-block mb-3 px-4 py-1.5 rounded-full glass-card text-xs tracking-widest text-white/40 font-sans">
             FROM ME TO WE
           </div>
@@ -396,35 +427,99 @@ export default function Home() {
           </p>
         </header>
 
-        {/* ── Tab 切换器 ── */}
-        <div className="w-full mb-6 flex gap-3 p-1 rounded-2xl bg-white/[0.04] border border-white/[0.06]">
-          <button
-            onClick={() => { setActiveTab("future"); setFuturePhase("input"); setWallPhase("wall"); }}
-            className={`flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-300 ${
-              activeTab === "future"
-                ? "bg-gradient-to-r from-pink-500/20 to-violet-500/15 border border-pink-400/30 text-pink-200 shadow-lg shadow-pink-500/10"
-                : "text-white/35 hover:text-white/55 hover:bg-white/[0.04]"
-            }`}
-          >
-            ✦ 给未来的自己
-          </button>
-          <button
-            onClick={() => { setActiveTab("wall"); setWallPhase("wall"); setFuturePhase("input"); }}
-            className={`flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-300 ${
-              activeTab === "wall"
-                ? "bg-gradient-to-r from-emerald-500/20 to-cyan-500/15 border border-emerald-400/30 text-emerald-200 shadow-lg shadow-emerald-500/10"
-                : "text-white/35 hover:text-white/55 hover:bg-white/[0.04]"
-            }`}
-          >
-            🌳 共鸣墙
-          </button>
-        </div>
+        {/* ════════════════════════════════ */}
+        {/* ── 首页：三模块卡片 ── */}
+        {/* ════════════════════════════════ */}
+        {activeModule === "home" && (
+          <section className="w-full animate-[fadeIn_0.6s_ease]">
+            <div className="grid gap-5">
+              {/* 卡片1：给未来的自己 */}
+              <button
+                onClick={() => { setActiveModule("future"); setFuturePhase("input"); }}
+                className="glass-card p-6 md:p-7 text-left group hover:bg-white/[0.07] transition-all duration-300"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="text-3xl mt-1">✦</div>
+                  <div className="flex-1">
+                    <h2 className="text-lg font-bold gradient-text font-serif mb-1.5 group-hover:brightness-125 transition-all">
+                      给未来的自己
+                    </h2>
+                    <p className="text-sm text-white/40 font-sans leading-relaxed">
+                      写一封信，选择寄给1年、3年、5年或10年后的自己。AI模拟未来的你回信，告诉你那时候的看法和感受。
+                    </p>
+                    <div className="mt-3 flex gap-2">
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-pink-500/10 text-pink-300/50 font-sans">AI回信</span>
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-pink-500/10 text-pink-300/50 font-sans">时间胶囊</span>
+                    </div>
+                  </div>
+                </div>
+              </button>
+
+              {/* 卡片2：共鸣墙 */}
+              <button
+                onClick={() => { setActiveModule("wall"); setWallPhase("wall"); }}
+                className="glass-card p-6 md:p-7 text-left group hover:bg-white/[0.07] transition-all duration-300"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="text-3xl mt-1">🌳</div>
+                  <div className="flex-1">
+                    <h2 className="text-lg font-bold font-serif mb-1.5 text-emerald-200/80 group-hover:brightness-125 transition-all">
+                      共鸣墙
+                    </h2>
+                    <p className="text-sm text-white/40 font-sans leading-relaxed">
+                      贴一张纸条到墙上，写下此刻的困惑。系统会帮你匹配相似的故事——发现别人也走过这条路，以及后来发生了什么。
+                    </p>
+                    <div className="mt-3 flex gap-2">
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-300/50 font-sans">故事匹配</span>
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-300/50 font-sans">匿名倾诉</span>
+                    </div>
+                  </div>
+                </div>
+              </button>
+
+              {/* 卡片3：树洞 */}
+              <button
+                onClick={() => { setActiveModule("treehole"); setTreeholePhase("input"); }}
+                className="glass-card p-6 md:p-7 text-left group hover:bg-white/[0.07] transition-all duration-300"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="text-3xl mt-1">🕳️</div>
+                  <div className="flex-1">
+                    <h2 className="text-lg font-bold font-serif mb-1.5 text-amber-200/80 group-hover:brightness-125 transition-all">
+                      树洞
+                    </h2>
+                    <p className="text-sm text-white/40 font-sans leading-relaxed">
+                      有时候只想说，不想被回应。把心事丢进树洞，没有人会回复你，也没有人会评判你。说完就走，轻如落叶。
+                    </p>
+                    <div className="mt-3 flex gap-2">
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-300/50 font-sans">纯倾诉</span>
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-300/50 font-sans">无回应</span>
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-300/50 font-sans">匿名</span>
+                    </div>
+                  </div>
+                </div>
+              </button>
+            </div>
+
+            <p className="text-center text-xs text-white/20 mt-8 font-sans">
+              不需要登录 · 不需要注册 · 打开就用
+            </p>
+          </section>
+        )}
 
         {/* ════════════════════════════════ */}
         {/* ── Module 1: 给未来的自己 ── */}
         {/* ════════════════════════════════ */}
-        {activeTab === "future" && (
+        {activeModule === "future" && (
           <>
+            {/* 返回首页 */}
+            <button
+              onClick={goHome}
+              className="w-full mb-5 py-2.5 rounded-xl bg-white/5 border border-white/8 text-white/30 hover:text-white/50 text-sm font-sans transition-all"
+            >
+              ← 返回首页
+            </button>
+
             {/* 错误提示 */}
             {futureError && (
               <div className="w-full mb-4 p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-sm text-red-300/80 text-center animate-[fadeIn_0.3s_ease]">
@@ -480,10 +575,6 @@ export default function Home() {
                     寄出这封信 ✦
                   </button>
                 </div>
-
-                <p className="text-center text-xs text-white/20 mt-4 font-sans">
-                  不需要登录 · 不需要注册 · 打开就用
-                </p>
               </section>
             )}
 
@@ -652,8 +743,16 @@ export default function Home() {
         {/* ════════════════════════════════ */}
         {/* ── Module 2: 共鸣墙 ── */}
         {/* ════════════════════════════════ */}
-        {activeTab === "wall" && (
+        {activeModule === "wall" && (
           <>
+            {/* 返回首页 */}
+            <button
+              onClick={goHome}
+              className="w-full mb-5 py-2.5 rounded-xl bg-white/5 border border-white/8 text-white/30 hover:text-white/50 text-sm font-sans transition-all"
+            >
+              ← 返回首页
+            </button>
+
             {/* ── 共鸣墙 Feed ── */}
             {wallPhase === "wall" && (
               <section className="w-full animate-[fadeIn_0.6s_ease]">
@@ -680,19 +779,14 @@ export default function Home() {
                       className="glass-card p-5 echo-card"
                       style={{ animationDelay: `${i * 0.1}s` }}
                     >
-                      {/* 纸条头部 */}
                       <div className="flex items-center gap-2.5 mb-3">
                         <span className="text-lg">{post.emoji}</span>
                         <span className="text-xs text-white/40 font-sans">{post.name}</span>
                         <span className="text-xs text-white/20 font-sans">· {post.time}</span>
                       </div>
-
-                      {/* 当时的心声 */}
                       <p className="text-sm text-white/60 font-sans leading-relaxed italic mb-3">
                         &ldquo;{post.confession}&rdquo;
                       </p>
-
-                      {/* 后来发生的事 */}
                       {post.reflection && (
                         <div className="mt-2 p-3 rounded-xl bg-emerald-500/[0.06] border border-emerald-400/10">
                           <p className="text-xs text-emerald-300/40 mb-1.5 font-sans">后来的TA：</p>
@@ -701,8 +795,6 @@ export default function Home() {
                           </p>
                         </div>
                       )}
-
-                      {/* 标签 */}
                       <div className="mt-3 flex gap-1.5 flex-wrap">
                         {post.tags.map((tag: string) => (
                           <span
@@ -789,7 +881,6 @@ export default function Home() {
             {/* ── 共鸣墙：共鸣展示 ── */}
             {wallPhase === "resonance" && matchedStories && (
               <section className="w-full animate-[fadeIn_0.6s_ease]">
-                {/* 用户原始倾诉 */}
                 <div className="glass-card p-5 mb-5">
                   <div className="flex items-center gap-2.5 mb-3">
                     <span className="text-lg">✨</span>
@@ -800,7 +891,6 @@ export default function Home() {
                   </p>
                 </div>
 
-                {/* 共鸣解读 */}
                 {resonanceMsg && (
                   <div className="mb-5 p-4 rounded-xl bg-emerald-500/[0.08] border border-emerald-400/15 text-center animate-[fadeIn_0.8s_ease]">
                     <p className="text-sm text-emerald-200/70 font-sans leading-relaxed whitespace-pre-line">
@@ -809,7 +899,6 @@ export default function Home() {
                   </div>
                 )}
 
-                {/* 分割线 */}
                 <div className="text-center mb-5 relative">
                   <div className="absolute inset-x-0 top-1/2 h-px divider-line" />
                   <span className="relative inline-block bg-[#0c0a14] px-5 py-1.5 text-sm text-white/30 font-sans">
@@ -817,7 +906,6 @@ export default function Home() {
                   </span>
                 </div>
 
-                {/* 匹配的故事卡片 */}
                 <div className="grid gap-4">
                   {matchedStories.map((story, i) => (
                     <div
@@ -825,27 +913,20 @@ export default function Home() {
                       className="glass-card p-5 echo-card"
                       style={{ animationDelay: `${i * 0.2}s` }}
                     >
-                      {/* 故事头部 */}
                       <div className="flex items-center gap-2.5 mb-3">
                         <span className="text-lg">{story.emoji}</span>
                         <span className="text-xs text-white/40 font-sans">{story.name}</span>
                         <span className="text-xs text-white/20 font-sans">· {story.time}</span>
                       </div>
-
-                      {/* 当时的困惑 */}
                       <p className="text-sm text-white/60 font-sans leading-relaxed italic mb-3">
                         &ldquo;{story.confession}&rdquo;
                       </p>
-
-                      {/* 后来发生的事 */}
                       <div className="mt-2 p-3 rounded-xl bg-emerald-500/[0.06] border border-emerald-400/10">
                         <p className="text-xs text-emerald-300/40 mb-1.5 font-sans">后来的TA：</p>
                         <p className="text-sm text-emerald-200/60 font-sans leading-relaxed">
                           {story.reflection}
                         </p>
                       </div>
-
-                      {/* 标签 */}
                       <div className="mt-3 flex gap-1.5 flex-wrap">
                         {story.tags.map((tag) => (
                           <span
@@ -860,12 +941,134 @@ export default function Home() {
                   ))}
                 </div>
 
-                {/* 回到墙 */}
                 <button
                   onClick={backToWall}
                   className="mt-8 w-full py-3.5 rounded-2xl bg-white/5 border border-white/8 text-white/40 hover:text-white/70 hover:border-white/15 transition-all text-sm font-sans"
                 >
                   回到共鸣墙 → 你的纸条将出现在墙上
+                </button>
+              </section>
+            )}
+          </>
+        )}
+
+        {/* ════════════════════════════════ */}
+        {/* ── Module 3: 树洞 ── */}
+        {/* ════════════════════════════════ */}
+        {activeModule === "treehole" && (
+          <>
+            {/* 返回首页 */}
+            <button
+              onClick={goHome}
+              className="w-full mb-5 py-2.5 rounded-xl bg-white/5 border border-white/8 text-white/30 hover:text-white/50 text-sm font-sans transition-all"
+            >
+              ← 返回首页
+            </button>
+
+            {/* ── 树洞输入 ── */}
+            {treeholePhase === "input" && (
+              <section className="w-full animate-[fadeIn_0.6s_ease]">
+                <div className="text-center mb-6">
+                  <h2 className="text-2xl font-bold text-amber-200/80 font-serif mb-2">🕳️ 树洞</h2>
+                  <p className="text-sm text-white/30 font-sans">
+                    说完就走，没有人会回应，也没有人会评判
+                  </p>
+                </div>
+
+                <div className="glass-card p-6 md:p-8">
+                  <p className="text-xs text-white/25 mb-4 font-sans leading-relaxed">
+                    树洞不会回复你，不会匹配故事，不会做任何事。它只是安静地收下你想说的话，然后帮你丢掉。
+                    像往湖里扔一颗石子——水面会荡一下，然后归于平静。说完，你就轻了。
+                  </p>
+
+                  <textarea
+                    value={treeholeInput}
+                    onChange={(e) => setTreeholeInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        handleTreeholeSubmit();
+                      }
+                    }}
+                    placeholder={"说点什么吧...\n\n不需要有逻辑，不需要有结论，只需要说出来"}
+                    className="letter-input w-full h-28 p-4 text-base leading-relaxed text-white/90 placeholder-white/20 resize-none font-sans"
+                    autoFocus
+                  />
+
+                  <button
+                    onClick={handleTreeholeSubmit}
+                    disabled={!treeholeInput.trim()}
+                    className="w-full mt-5 py-3.5 text-base rounded-2xl bg-amber-500/15 border border-amber-400/20 text-amber-200/70 hover:bg-amber-500/20 hover:border-amber-400/30 hover:text-amber-200 transition-all font-sans disabled:bg-white/5 disabled:text-white/25 disabled:border-white/8"
+                  >
+                    丢进树洞 🕳️
+                  </button>
+                </div>
+
+                {/* ── 树洞里已有的纸条 ── */}
+                <div className="mt-8">
+                  <div className="text-center mb-5 relative">
+                    <div className="absolute inset-x-0 top-1/2 h-px divider-line" />
+                    <span className="relative inline-block bg-[#0c0a14] px-5 py-1.5 text-sm text-white/30 font-sans">
+                      树洞里还有这些纸条
+                    </span>
+                  </div>
+
+                  <div className="grid gap-3">
+                    {treeholeList.slice(0, 8).map((item, i) => (
+                      <div
+                        key={item.id}
+                        className="echo-card glass-card p-4"
+                        style={{ animationDelay: `${i * 0.1}s` }}
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-sm">{item.emoji}</span>
+                          <span className="text-xs text-white/20 font-sans">{item.time}</span>
+                        </div>
+                        <p className="text-sm text-white/50 font-sans leading-relaxed italic">
+                          &ldquo;{item.content}&rdquo;
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <p className="text-center text-xs text-white/20 mt-5 font-sans">
+                    没有人回复这些纸条 · 它们只是安静地在这里
+                  </p>
+                </div>
+              </section>
+            )}
+
+            {/* ── 树洞：丢完后 ── */}
+            {treeholePhase === "sealed" && (
+              <section className="w-full animate-[fadeIn_0.6s_ease]">
+                <div className="glass-card p-8 md:p-10 text-center capsule-sealed">
+                  <div className="text-5xl mb-5">🕳️</div>
+                  <h3 className="text-lg text-amber-200/80 font-serif mb-3">
+                    丢进去了
+                  </h3>
+                  <p className="text-sm text-white/40 font-sans leading-relaxed mb-6">
+                    没有人会读到，没有人会回复。<br />
+                    你说完了，就轻了一点。<br />
+                    像落叶落进洞里，安静地消失。
+                  </p>
+                  <div className="p-4 rounded-xl bg-amber-500/[0.06] border border-amber-400/10">
+                    <p className="text-xs text-amber-300/40 font-sans italic">
+                      &ldquo;{treeholeInput}&rdquo;
+                    </p>
+                  </div>
+                  <p className="text-xs text-white/20 mt-4 font-sans">
+                    · 树洞不会保存这些话 ·
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => {
+                    setTreeholeInput("");
+                    setTreeholePhase("input");
+                  }}
+                  className="mt-6 w-full py-3.5 rounded-2xl bg-white/5 border border-white/8 text-white/40 hover:text-white/70 hover:border-white/15 transition-all text-sm font-sans"
+                >
+                  再丢一些进去 →
                 </button>
               </section>
             )}
