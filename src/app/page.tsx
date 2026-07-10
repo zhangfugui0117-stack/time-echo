@@ -429,13 +429,6 @@ export default function Home() {
         <div className="aurora-orb aurora-orb-3" />
         <div className="aurora-orb aurora-orb-4" />
         <div className="aurora-orb aurora-orb-5" />
-        {/* 漂浮光点 */}
-        <div className="glow-dot glow-dot-1" />
-        <div className="glow-dot glow-dot-2" />
-        <div className="glow-dot glow-dot-3" />
-        <div className="glow-dot glow-dot-4" />
-        <div className="glow-dot glow-dot-5" />
-        <div className="glow-dot glow-dot-6" />
         {/* 流星 */}
         <div className="shooting-star" />
         <div className="shooting-star" />
