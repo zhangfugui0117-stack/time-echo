@@ -442,6 +442,7 @@ export default function Home() {
         <div className="shooting-star" />
       </div>
       <div className="vignette" />
+      <div className="content-veil" />
       <div className="noise-overlay" />
 
       {/* 主内容 */}
