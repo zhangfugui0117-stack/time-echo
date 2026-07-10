@@ -228,13 +228,13 @@ body {
   background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.35) 100%);
 }
 
-/* 内容区域暗化遮罩（让光球退到UI后面） */
+/* 内容区域暗化遮罩（让光球和萤火虫退到UI后面） */
 .content-veil {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 1;
-  background: radial-gradient(ellipse 55% 65% at center, rgba(8, 6, 16, 0.65), rgba(8, 6, 16, 0.2) 60%, transparent 80%);
+  background: radial-gradient(ellipse 55% 65% at center, rgba(8, 6, 16, 0.82), rgba(8, 6, 16, 0.3) 60%, transparent 80%);
 }
 
 /* 噪点纹理 */
@@ -318,19 +318,20 @@ body {
   width: 4px;
   height: 4px;
   border-radius: 50%;
+  opacity: 0.5;
   will-change: transform, opacity;
 }
 
 .glow-dot-1 {
   background: #f9a8d4;
-  box-shadow: 0 0 10px 3px rgba(249, 168, 212, 0.4);
+  box-shadow: 0 0 6px 2px rgba(249, 168, 212, 0.3);
   top: 20%;
   left: 15%;
   animation: floatDot 12s ease-in-out infinite;
 }
 .glow-dot-2 {
   background: #c4b5fd;
-  box-shadow: 0 0 12px 4px rgba(196, 181, 253, 0.35);
+  box-shadow: 0 0 6px 2px rgba(196, 181, 253, 0.25);
   top: 60%;
   left: 80%;
   animation: floatDot 16s ease-in-out infinite reverse;
@@ -338,7 +339,7 @@ body {
 }
 .glow-dot-3 {
   background: #7dd3fc;
-  box-shadow: 0 0 10px 3px rgba(125, 211, 252, 0.3);
+  box-shadow: 0 0 6px 2px rgba(125, 211, 252, 0.22);
   top: 75%;
   left: 25%;
   animation: floatDot 14s ease-in-out infinite;
@@ -346,7 +347,7 @@ body {
 }
 .glow-dot-4 {
   background: #fcd34d;
-  box-shadow: 0 0 10px 3px rgba(252, 211, 77, 0.3);
+  box-shadow: 0 0 6px 2px rgba(252, 211, 77, 0.22);
   top: 35%;
   left: 70%;
   animation: floatDot 18s ease-in-out infinite reverse;
@@ -354,7 +355,7 @@ body {
 }
 .glow-dot-5 {
   background: #6ee7b7;
-  box-shadow: 0 0 10px 3px rgba(110, 231, 183, 0.3);
+  box-shadow: 0 0 6px 2px rgba(110, 231, 183, 0.22);
   top: 50%;
   left: 40%;
   animation: floatDot 20s ease-in-out infinite;
@@ -362,7 +363,7 @@ body {
 }
 .glow-dot-6 {
   background: #f9a8d4;
-  box-shadow: 0 0 8px 2px rgba(249, 168, 212, 0.25);
+  box-shadow: 0 0 5px 1.5px rgba(249, 168, 212, 0.2);
   top: 85%;
   left: 65%;
   animation: floatDot 15s ease-in-out infinite reverse;
@@ -370,10 +371,10 @@ body {
 }
 
 @keyframes floatDot {
-  0%, 100% { transform: translate(0, 0); opacity: 0.6; }
-  25% { transform: translate(30px, -40px); opacity: 0.9; }
-  50% { transform: translate(-20px, -20px); opacity: 0.4; }
-  75% { transform: translate(15px, 30px); opacity: 0.8; }
+  0%, 100% { transform: translate(0, 0); opacity: 0.4; }
+  25% { transform: translate(30px, -40px); opacity: 0.7; }
+  50% { transform: translate(-20px, -20px); opacity: 0.25; }
+  75% { transform: translate(15px, 30px); opacity: 0.6; }
 }
 
 /* ── 玻璃卡片（优化backdrop-filter） ── */
