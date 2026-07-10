@@ -175,12 +175,22 @@ function matchEchoes(userInput: string, count = 3) {
   return scored.sort((a, b) => b._score - a._score).slice(0, count).map(({ _score, ...rest }) => rest);
 }
 
+// ── 语气选项 ──
+const toneOptions = [
+  { id: "warm", label: "温暖", emoji: "🔥", desc: "热情鼓励，像老朋友拍肩" },
+  { id: "calm", label: "平静", emoji: "🌊", desc: "沉稳淡然，像深夜独坐" },
+  { id: "humor", label: "幽默", emoji: "😄", desc: "轻松自嘲，偶尔损你两句" },
+  { id: "gentle", label: "温柔", emoji: "💗", desc: "轻声细语，像被拥抱" },
+  { id: "sharp", label: "锐利", emoji: "⚡", desc: "直击要害，不绕弯子" },
+  { id: "poetic", label: "诗意", emoji: "🌙", desc: "感性细腻，像写散文" },
+];
+
 // ── API 调用 ──
-async function fetchFutureReply(message: string, years: number) {
+async function fetchFutureReply(message: string, years: number, tone: string) {
   const response = await fetch("/api/reply", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message, years }),
+    body: JSON.stringify({ message, years, tone }),
   });
   if (!response.ok) {
     const data = await response.json().catch(() => ({}));
@@ -250,6 +260,7 @@ export default function Home() {
   // ── 给未来的自己 module state ──
   const [message, setMessage] = useState("");
   const [years, setYears] = useState("3");
+  const [tone, setTone] = useState("warm");
   const [futurePhase, setFuturePhase] = useState<"input" | "loading" | "reply" | "echoes">("input");
   const [result, setResult] = useState<{
     reply: string;
@@ -287,7 +298,7 @@ export default function Home() {
     setFutureError("");
     setFuturePhase("loading");
     try {
-      const data = await fetchFutureReply(message, Number(years));
+      const data = await fetchFutureReply(message, Number(years), tone);
       setResult(data);
       setFuturePhase("reply");
       startTyping(data.reply);
@@ -549,6 +560,30 @@ export default function Home() {
                         </button>
                       ))}
                     </div>
+                  </div>
+
+                  {/* 语气选择 */}
+                  <div className="mb-5">
+                    <label className="text-xs text-white/30 uppercase tracking-widest mb-3 block font-sans">
+                      选一个未来的你的语气
+                    </label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {toneOptions.map((t) => (
+                        <button
+                          key={t.id}
+                          onClick={() => setTone(t.id)}
+                          className={`py-2.5 px-2 rounded-xl text-center transition-all ${
+                            tone === t.id ? "tone-btn-active" : "year-btn text-white/40"
+                          }`}
+                        >
+                          <div className="text-base mb-0.5">{t.emoji}</div>
+                          <div className="text-xs font-medium">{t.label}</div>
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-xs text-white/20 mt-2 font-sans text-center">
+                      {toneOptions.find(t => t.id === tone)?.desc}
+                    </p>
                   </div>
 
                   {/* 输入框 */}
