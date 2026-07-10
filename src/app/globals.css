@@ -10,14 +10,22 @@
 }
 
 body {
-  background: #0c0a14;
+  background:
+    linear-gradient(135deg, #0a0815 0%, #0f0a1c 30%, #0c0a18 60%, #0e0814 100%);
+  background-size: 300% 300%;
+  animation: bgShift 25s ease-in-out infinite;
   color: #e8e6f0;
   font-family: var(--font-sans);
   overflow-x: hidden;
   min-height: 100vh;
 }
 
-/* ── 丰富极光背景 ── */
+@keyframes bgShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ── 极光背景 ── */
 .aurora-bg {
   position: fixed;
   inset: 0;
@@ -26,15 +34,81 @@ body {
   overflow: hidden;
 }
 
-/* 底层渐变 */
+/* 底层彩色渐变mesh */
 .aurora-bg::before {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -20%;
   background:
-    radial-gradient(ellipse at 20% 0%, rgba(76, 29, 149, 0.12), transparent 50%),
-    radial-gradient(ellipse at 80% 100%, rgba(190, 24, 93, 0.10), transparent 50%),
-    radial-gradient(ellipse at 50% 50%, rgba(6, 182, 212, 0.04), transparent 60%);
+    radial-gradient(ellipse 60% 50% at 15% 10%, rgba(76, 29, 149, 0.20), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 85% 90%, rgba(190, 24, 93, 0.16), transparent 60%),
+    radial-gradient(ellipse 40% 30% at 70% 20%, rgba(6, 182, 212, 0.10), transparent 55%),
+    radial-gradient(ellipse 45% 35% at 30% 80%, rgba(245, 158, 11, 0.08), transparent 55%);
+  animation: meshShift 30s ease-in-out infinite;
+}
+
+@keyframes meshShift {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(2%, -1%) rotate(2deg); }
+  66% { transform: translate(-1%, 2%) rotate(-1deg); }
+}
+
+/* ── 极光丝带（流动的极光） ── */
+.aurora-ribbon {
+  position: absolute;
+  width: 150%;
+  height: 200px;
+  left: -25%;
+  filter: blur(40px);
+  opacity: 0.3;
+  border-radius: 50%;
+  will-change: transform, opacity;
+}
+
+.aurora-ribbon-1 {
+  top: 5%;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(124, 58, 237, 0.3) 20%,
+    rgba(236, 72, 153, 0.4) 45%,
+    rgba(6, 182, 212, 0.2) 70%,
+    transparent 100%);
+  animation: ribbonWave 18s ease-in-out infinite;
+}
+
+.aurora-ribbon-2 {
+  top: 55%;
+  height: 150px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(6, 182, 212, 0.2) 15%,
+    rgba(16, 185, 129, 0.25) 40%,
+    rgba(124, 58, 237, 0.3) 65%,
+    transparent 100%);
+  animation: ribbonWave 22s ease-in-out infinite reverse;
+  animation-delay: -5s;
+}
+
+.aurora-ribbon-3 {
+  bottom: 10%;
+  height: 180px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(245, 158, 11, 0.15) 10%,
+    rgba(236, 72, 153, 0.25) 35%,
+    rgba(124, 58, 237, 0.2) 60%,
+    rgba(6, 182, 212, 0.15) 85%,
+    transparent 100%);
+  animation: ribbonWave 25s ease-in-out infinite;
+  animation-delay: -12s;
+}
+
+@keyframes ribbonWave {
+  0% { transform: translateX(0) skewX(0deg) scaleY(1); opacity: 0.3; }
+  25% { transform: translateX(-5%) skewX(-8deg) scaleY(1.3); opacity: 0.45; }
+  50% { transform: translateX(3%) skewX(5deg) scaleY(0.9); opacity: 0.25; }
+  75% { transform: translateX(-2%) skewX(-3deg) scaleY(1.15); opacity: 0.4; }
+  100% { transform: translateX(0) skewX(0deg) scaleY(1); opacity: 0.3; }
 }
 
 /* 星空层（纯CSS box-shadow，不占JS性能） */
@@ -168,53 +242,129 @@ body {
   position: absolute;
   border-radius: 50%;
   filter: blur(70px);
-  opacity: 0.28;
-  animation: drift 35s ease-in-out infinite;
-  will-change: transform;
+  will-change: transform, opacity;
+  animation: breathe 8s ease-in-out infinite, drift 35s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.30; }
+  50% { opacity: 0.48; }
 }
 
 .aurora-orb-1 {
-  width: 400px;
-  height: 400px;
+  width: 420px;
+  height: 420px;
   background: radial-gradient(circle, #7c3aed, transparent 70%);
-  top: -5%;
+  top: -8%;
   left: -5%;
-  animation-delay: 0s;
+  animation-delay: 0s, 0s;
 }
 
 .aurora-orb-2 {
-  width: 350px;
-  height: 350px;
+  width: 380px;
+  height: 380px;
   background: radial-gradient(circle, #ec4899, transparent 70%);
-  top: 50%;
+  top: 45%;
   right: -8%;
-  animation-delay: -10s;
+  animation-delay: -3s, -10s;
 }
 
 .aurora-orb-3 {
-  width: 300px;
-  height: 300px;
+  width: 320px;
+  height: 320px;
   background: radial-gradient(circle, #06b6d4, transparent 70%);
   bottom: -10%;
-  left: 20%;
-  animation-delay: -20s;
+  left: 15%;
+  animation-delay: -5s, -20s;
 }
 
-/* 第4个暖色光球 */
 .aurora-orb-4 {
-  width: 280px;
-  height: 280px;
+  width: 260px;
+  height: 260px;
   background: radial-gradient(circle, #f59e0b, transparent 70%);
-  top: 30%;
-  left: 60%;
-  opacity: 0.15;
-  animation-delay: -15s;
+  top: 25%;
+  left: 55%;
+  animation-delay: -7s, -15s;
+}
+
+/* 第5个光球（翠绿色，增加色彩层次） */
+.aurora-orb-5 {
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, #10b981, transparent 70%);
+  top: 65%;
+  left: 45%;
+  animation-delay: -2s, -25s;
 }
 
 @keyframes drift {
   0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(30px, -20px) scale(1.05); }
-  66% { transform: translate(-20px, 30px) scale(0.98); }
+  33% { transform: translate(30px, -20px) scale(1.08); }
+  66% { transform: translate(-20px, 25px) scale(0.95); }
+}
+
+/* ── 漂浮光点（萤火虫效果） ── */
+.glow-dot {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  will-change: transform, opacity;
+}
+
+.glow-dot-1 {
+  background: #f9a8d4;
+  box-shadow: 0 0 10px 3px rgba(249, 168, 212, 0.4);
+  top: 20%;
+  left: 15%;
+  animation: floatDot 12s ease-in-out infinite;
+}
+.glow-dot-2 {
+  background: #c4b5fd;
+  box-shadow: 0 0 12px 4px rgba(196, 181, 253, 0.35);
+  top: 60%;
+  left: 80%;
+  animation: floatDot 16s ease-in-out infinite reverse;
+  animation-delay: -4s;
+}
+.glow-dot-3 {
+  background: #7dd3fc;
+  box-shadow: 0 0 10px 3px rgba(125, 211, 252, 0.3);
+  top: 75%;
+  left: 25%;
+  animation: floatDot 14s ease-in-out infinite;
+  animation-delay: -7s;
+}
+.glow-dot-4 {
+  background: #fcd34d;
+  box-shadow: 0 0 10px 3px rgba(252, 211, 77, 0.3);
+  top: 35%;
+  left: 70%;
+  animation: floatDot 18s ease-in-out infinite reverse;
+  animation-delay: -3s;
+}
+.glow-dot-5 {
+  background: #6ee7b7;
+  box-shadow: 0 0 10px 3px rgba(110, 231, 183, 0.3);
+  top: 50%;
+  left: 40%;
+  animation: floatDot 20s ease-in-out infinite;
+  animation-delay: -10s;
+}
+.glow-dot-6 {
+  background: #f9a8d4;
+  box-shadow: 0 0 8px 2px rgba(249, 168, 212, 0.25);
+  top: 85%;
+  left: 65%;
+  animation: floatDot 15s ease-in-out infinite reverse;
+  animation-delay: -6s;
+}
+
+@keyframes floatDot {
+  0%, 100% { transform: translate(0, 0); opacity: 0.6; }
+  25% { transform: translate(30px, -40px); opacity: 0.9; }
+  50% { transform: translate(-20px, -20px); opacity: 0.4; }
+  75% { transform: translate(15px, 30px); opacity: 0.8; }
 }
 
 /* ── 玻璃卡片（优化backdrop-filter） ── */
@@ -468,8 +618,21 @@ body {
 /* ── 响应式优化 ── */
 @media (max-width: 640px) {
   .aurora-orb {
-    filter: blur(40px);
-    opacity: 0.2;
+    filter: blur(50px);
+  }
+  .aurora-ribbon {
+    filter: blur(30px);
+    height: 120px;
+  }
+  .aurora-ribbon-2 {
+    height: 100px;
+  }
+  .aurora-ribbon-3 {
+    height: 110px;
+  }
+  .glow-dot {
+    width: 3px;
+    height: 3px;
   }
 }
 

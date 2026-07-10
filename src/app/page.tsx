@@ -416,13 +416,27 @@ export default function Home() {
 
   return (
     <div className="relative min-h-screen flex flex-col items-center px-5 py-8 md:py-14">
-      {/* 丰富极光背景 */}
+      {/* 极光背景 */}
       <div className="aurora-bg">
         <div className="starfield" />
+        {/* 极光丝带 */}
+        <div className="aurora-ribbon aurora-ribbon-1" />
+        <div className="aurora-ribbon aurora-ribbon-2" />
+        <div className="aurora-ribbon aurora-ribbon-3" />
+        {/* 极光光球 */}
         <div className="aurora-orb aurora-orb-1" />
         <div className="aurora-orb aurora-orb-2" />
         <div className="aurora-orb aurora-orb-3" />
         <div className="aurora-orb aurora-orb-4" />
+        <div className="aurora-orb aurora-orb-5" />
+        {/* 漂浮光点 */}
+        <div className="glow-dot glow-dot-1" />
+        <div className="glow-dot glow-dot-2" />
+        <div className="glow-dot glow-dot-3" />
+        <div className="glow-dot glow-dot-4" />
+        <div className="glow-dot glow-dot-5" />
+        <div className="glow-dot glow-dot-6" />
+        {/* 流星 */}
         <div className="shooting-star" />
         <div className="shooting-star" />
         <div className="shooting-star" />
