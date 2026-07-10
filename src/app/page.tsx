@@ -418,25 +418,10 @@ export default function Home() {
     <div className="relative min-h-screen flex flex-col items-center px-5 py-8 md:py-14">
       {/* 极光背景 */}
       <div className="aurora-bg">
-        <div className="starfield" />
-        {/* 极光丝带 */}
-        <div className="aurora-ribbon aurora-ribbon-1" />
-        <div className="aurora-ribbon aurora-ribbon-2" />
-        <div className="aurora-ribbon aurora-ribbon-3" />
-        {/* 极光光球 */}
         <div className="aurora-orb aurora-orb-1" />
         <div className="aurora-orb aurora-orb-2" />
         <div className="aurora-orb aurora-orb-3" />
-        <div className="aurora-orb aurora-orb-4" />
-        <div className="aurora-orb aurora-orb-5" />
-        {/* 流星 */}
-        <div className="shooting-star" />
-        <div className="shooting-star" />
-        <div className="shooting-star" />
       </div>
-      <div className="vignette" />
-      <div className="content-veil" />
-      <div className="noise-overlay" />
 
       {/* 主内容 */}
       <main className="relative z-10 w-full max-w-xl flex flex-col items-center">
