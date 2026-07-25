@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
+import { generateReply, generateResonance } from "@/lib/ai-client";
 
-// ── 预置回声语料库 ──
+// ── 预置回声语料库（仅用于页面展示，AI调用在 ai-client.ts 中）──
 const echoLibrary = [
   { id: "echo_01", question: "毕业了要不要回老家", reply: "三年后的我回来了。不是认输，是终于知道自己要什么了。大城市很好，但那种'我在这里但我不属于这里'的感觉，回老家后反而消失了。", tags: ["职业", "家庭", "选择"] },
   { id: "echo_02", question: "不知道自己到底喜欢什么", reply: "我现在也不确定，但我不再焦虑这件事了。原来'找到热爱'不是一瞬间的事，是不断试错的过程。你现在的迷茫本身就是一种探索。", tags: ["自我", "方向", "迷茫"] },
@@ -185,31 +186,14 @@ const toneOptions = [
   { id: "poetic", label: "诗意", emoji: "🌙", desc: "感性细腻，像写散文" },
 ];
 
-// ── API 调用 ──
+// ── 客户端直接调用AI（不再需要服务端API路由）──
 async function fetchFutureReply(message: string, years: number, tone: string) {
-  const response = await fetch("/api/reply", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message, years, tone }),
-  });
-  if (!response.ok) {
-    const data = await response.json().catch(() => ({}));
-    throw new Error(data.error || `AI 服务暂时不可用 (${response.status})`);
-  }
-  return response.json();
+  return await generateReply(message, years, tone);
 }
 
 async function fetchResonance(userInput: string, matchedStories: string) {
-  const response = await fetch("/api/resonance", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ userInput, matchedStories }),
-  });
-  if (!response.ok) {
-    const data = await response.json().catch(() => ({}));
-    throw new Error(data.error || `AI 服务暂时不可用 (${response.status})`);
-  }
-  return response.json();
+  const resonance = await generateResonance(userInput, matchedStories);
+  return { resonance };
 }
 
 // ── 打字机效果 Hook ──
