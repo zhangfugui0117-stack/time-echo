@@ -9,15 +9,94 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+/* ═══════════════════════════════════════
+   CSS变量 — 支持双主题切换
+   ═══════════════════════════════════════ */
+:root,
+[data-theme="dark"] {
+  --bg-base: #0c0a14;
+  --bg-card: rgba(255, 255, 255, 0.05);
+  --bg-card-hover: rgba(255, 255, 255, 0.07);
+  --bg-input: rgba(255, 255, 255, 0.04);
+  --bg-input-focus: rgba(255, 255, 255, 0.07);
+  --bg-button-secondary: rgba(255, 255, 255, 0.04);
+  --bg-button-secondary-hover: rgba(255, 255, 255, 0.06);
+  --bg-disabled: rgba(255, 255, 255, 0.05);
+
+  --text-primary: #e8e6f0;
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --text-tertiary: rgba(255, 255, 255, 0.3);
+  --text-disabled: rgba(255, 255, 255, 0.25);
+  --text-on-accent: #1a1025;
+  --text-muted: rgba(255, 255, 255, 0.4);
+
+  --border-default: rgba(255, 255, 255, 0.1);
+  --border-hover: rgba(255, 255, 255, 0.18);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+
+  --accent: #ec4899;
+  --accent-hover: rgba(236, 72, 153, 0.35);
+  --accent-soft: rgba(236, 72, 153, 0.15);
+  --accent-glow: rgba(236, 72, 153, 0.45);
+
+  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --shadow-button: 0 8px 24px rgba(236, 72, 153, 0.35);
+
+  --gradient-text: linear-gradient(135deg, #f9a8d4 0%, #c4b5fd 35%, #7dd3fc 65%, #fcd34d 100%);
+
+  --aurora-1: radial-gradient(circle, #7c3aed, transparent 70%);
+  --aurora-2: radial-gradient(circle, #ec4899, transparent 70%);
+  --aurora-3: radial-gradient(circle, #06b6d4, transparent 70%);
+}
+
+[data-theme="light"] {
+  --bg-base: #fafaf7;
+  --bg-card: #ffffff;
+  --bg-card-hover: #ffffff;
+  --bg-input: #f5f5f0;
+  --bg-input-focus: #ffffff;
+  --bg-button-secondary: #f5f5f0;
+  --bg-button-secondary-hover: #ebe9e0;
+  --bg-disabled: #f0ede5;
+
+  --text-primary: #1a1a1a;
+  --text-secondary: rgba(0, 0, 0, 0.65);
+  --text-tertiary: rgba(0, 0, 0, 0.4);
+  --text-disabled: rgba(0, 0, 0, 0.3);
+  --text-on-accent: #ffffff;
+  --text-muted: rgba(0, 0, 0, 0.5);
+
+  --border-default: rgba(0, 0, 0, 0.08);
+  --border-hover: rgba(0, 0, 0, 0.15);
+  --border-subtle: rgba(0, 0, 0, 0.06);
+
+  --accent: #1a1a1a;
+  --accent-hover: rgba(0, 0, 0, 0.85);
+  --accent-soft: rgba(0, 0, 0, 0.05);
+  --accent-glow: rgba(0, 0, 0, 0.15);
+
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-button: 0 4px 14px rgba(0, 0, 0, 0.15);
+
+  --gradient-text: linear-gradient(135deg, #1a1a1a 0%, #4a4a4a 50%, #1a1a1a 100%);
+
+  --aurora-1: radial-gradient(circle, #fde2d3, transparent 70%);
+  --aurora-2: radial-gradient(circle, #fce4ec, transparent 70%);
+  --aurora-3: radial-gradient(circle, #fff3d6, transparent 70%);
+}
+
 body {
-  background: #0c0a14;
-  color: #e8e6f0;
+  background: var(--bg-base);
+  color: var(--text-primary);
   font-family: var(--font-sans);
   overflow-x: hidden;
   min-height: 100vh;
+  transition: background 0.4s ease, color 0.4s ease;
 }
 
-/* ── 简化极光背景（性能优化版） ── */
+/* ═══════════════════════════════════════
+   极光背景（双主题适配）
+   ═══════════════════════════════════════ */
 .aurora-bg {
   position: fixed;
   inset: 0;
@@ -25,6 +104,11 @@ body {
   z-index: 0;
   overflow: hidden;
   opacity: 0.6;
+  transition: opacity 0.4s ease;
+}
+
+[data-theme="light"] .aurora-bg {
+  opacity: 0.5;
 }
 
 .aurora-orb {
@@ -36,10 +120,14 @@ body {
   will-change: transform;
 }
 
+[data-theme="light"] .aurora-orb {
+  opacity: 0.5;
+}
+
 .aurora-orb-1 {
-  width: 400px;  /* 减小尺寸 */
+  width: 400px;
   height: 400px;
-  background: radial-gradient(circle, #7c3aed, transparent 70%);
+  background: var(--aurora-1);
   top: -5%;
   left: -5%;
   animation-delay: 0s;
@@ -48,7 +136,7 @@ body {
 .aurora-orb-2 {
   width: 350px;
   height: 350px;
-  background: radial-gradient(circle, #ec4899, transparent 70%);
+  background: var(--aurora-2);
   top: 50%;
   right: -8%;
   animation-delay: -10s;
@@ -57,13 +145,11 @@ body {
 .aurora-orb-3 {
   width: 300px;
   height: 300px;
-  background: radial-gradient(circle, #06b6d4, transparent 70%);  /* 改用青色，减少橙色 */
+  background: var(--aurora-3);
   bottom: -10%;
   left: 20%;
   animation-delay: -20s;
 }
-
-/* 移除第4个orb，减少渲染压力 */
 
 @keyframes drift {
   0%, 100% { transform: translate(0, 0) scale(1); }
@@ -71,18 +157,19 @@ body {
   66% { transform: translate(-20px, 30px) scale(0.98); }
 }
 
-/* ── 移除浮动粒子（性能优化） ── */
-
-/* ── 玻璃卡片（优化backdrop-filter） ── */
+/* ═══════════════════════════════════════
+   卡片样式（双主题适配）
+   ═══════════════════════════════════════ */
 .glass-card {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--bg-card);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-default);
   border-radius: 24px;
   position: relative;
   overflow: hidden;
-  transition: border-color 0.3s ease, background 0.3s ease;
+  transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: var(--shadow-card);
 }
 
 .glass-card::before {
@@ -98,9 +185,24 @@ body {
   pointer-events: none;
 }
 
-/* ── 渐变文字 ── */
+[data-theme="light"] .glass-card::before {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.02), transparent 60%);
+}
+
+.glass-card:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-card-hover);
+}
+
+[data-theme="light"] .glass-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* ═══════════════════════════════════════
+   渐变文字
+   ═══════════════════════════════════════ */
 .gradient-text {
-  background: linear-gradient(135deg, #f9a8d4 0%, #c4b5fd 35%, #7dd3fc 65%, #fcd34d 100%);
+  background: var(--gradient-text);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -113,10 +215,12 @@ body {
   50% { background-position: 100% 50%; }
 }
 
-/* ── 打字机光标 ── */
+/* ═══════════════════════════════════════
+   打字机光标
+   ═══════════════════════════════════════ */
 .typing-cursor::after {
   content: "▎";
-  color: #f9a8d4;
+  color: var(--accent);
   animation: blink 0.8s step-end infinite;
   margin-left: 1px;
 }
@@ -129,7 +233,9 @@ body {
   50% { opacity: 0; }
 }
 
-/* ── 回信展开动画 ── */
+/* ═══════════════════════════════════════
+   回信展开动画
+   ═══════════════════════════════════════ */
 .reply-unfold {
   animation: unfold 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -146,13 +252,9 @@ body {
   }
 }
 
-/* ── 首页卡片悬停效果 ── */
-.glass-card:hover {
-  border-color: rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.07);
-}
-
-/* ── 回声卡片 ── */
+/* ═══════════════════════════════════════
+   回声卡片
+   ═══════════════════════════════════════ */
 .echo-card {
   opacity: 0;
   transform: translateY(10px);
@@ -166,30 +268,44 @@ body {
   }
 }
 
-/* ── 输入框 ── */
+/* ═══════════════════════════════════════
+   输入框
+   ═══════════════════════════════════════ */
 .letter-input {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
   border-radius: 16px;
   transition: all 0.3s ease;
+  color: var(--text-primary);
 }
 
 .letter-input:focus {
   outline: none;
-  border-color: rgba(236, 72, 153, 0.45);
-  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.12), 0 0 20px rgba(236, 72, 153, 0.08);
-  background: rgba(255, 255, 255, 0.07);
+  border-color: var(--accent-glow);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  background: var(--bg-input-focus);
 }
 
-/* ── 寄出按钮 ── */
+.letter-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+/* ═══════════════════════════════════════
+   寄出按钮（主按钮）
+   ═══════════════════════════════════════ */
 .send-btn {
-  background: linear-gradient(135deg, #ec4899 0%, #f59e0b 100%);
-  color: #1a1025;
+  background: var(--accent);
+  color: var(--text-on-accent);
   font-weight: 600;
   border-radius: 16px;
   position: relative;
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="dark"] .send-btn {
+  background: linear-gradient(135deg, #ec4899 0%, #f59e0b 100%);
+  color: #1a1025;
 }
 
 .send-btn::after {
@@ -205,7 +321,7 @@ body {
 
 .send-btn:not(:disabled):hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(236, 72, 153, 0.35);
+  box-shadow: var(--shadow-button);
 }
 
 .send-btn:not(:disabled):hover::after {
@@ -217,44 +333,61 @@ body {
 }
 
 .send-btn:disabled {
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.25);
+  background: var(--bg-disabled);
+  color: var(--text-disabled);
   cursor: not-allowed;
 }
 
-/* ── 年份选择按钮 ── */
+/* ═══════════════════════════════════════
+   次按钮（年份/语气选择）
+   ═══════════════════════════════════════ */
 .year-btn {
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-button-secondary);
   transition: all 0.25s ease;
+  color: var(--text-primary);
 }
 
 .year-btn:hover {
-  border-color: rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--border-hover);
+  background: var(--bg-button-secondary-hover);
 }
 
 .year-btn-active {
+  background: var(--accent-soft);
+  border-color: var(--accent-glow);
+  color: var(--accent);
+}
+
+[data-theme="dark"] .year-btn-active {
   background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(124, 58, 237, 0.1));
   border-color: rgba(236, 72, 153, 0.3);
   color: #f9a8d4;
 }
 
-/* ── 语气选择按钮（选中态） ── */
 .tone-btn-active {
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-glow);
+  color: var(--accent);
+  box-shadow: 0 2px 12px var(--accent-glow);
+}
+
+[data-theme="dark"] .tone-btn-active {
   background: linear-gradient(135deg, rgba(236, 72, 153, 0.18), rgba(245, 158, 11, 0.08));
   border: 1px solid rgba(236, 72, 153, 0.35);
   color: #f9a8d4;
   box-shadow: 0 2px 12px rgba(236, 72, 153, 0.15);
 }
 
-/* ── 加载动画（简化） ── */
+/* ═══════════════════════════════════════
+   加载动画
+   ═══════════════════════════════════════ */
 .loading-spinner {
   width: 32px;
   height: 32px;
-  border: 3px solid rgba(255, 255, 255, 0.1);
-  border-top-color: #ec4899;
+  border: 3px solid var(--border-default);
+  border-top-color: var(--accent);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -263,18 +396,24 @@ body {
   to { transform: rotate(360deg); }
 }
 
-/* ── 淡入动画 ── */
+/* ═══════════════════════════════════════
+   淡入动画
+   ═══════════════════════════════════════ */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ── 分隔线 ── */
+/* ═══════════════════════════════════════
+   分隔线
+   ═══════════════════════════════════════ */
 .divider-line {
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  background: linear-gradient(90deg, transparent, var(--border-default), transparent);
 }
 
-/* ── 滚动条 ── */
+/* ═══════════════════════════════════════
+   滚动条
+   ═══════════════════════════════════════ */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -284,16 +423,24 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-default);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--border-hover);
 }
 
-/* ── Tab 切换器 ── */
+/* ═══════════════════════════════════════
+   Tab 切换器
+   ═══════════════════════════════════════ */
 .tab-active {
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-glow);
+  color: var(--accent);
+}
+
+[data-theme="dark"] .tab-active {
   background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(124, 58, 237, 0.1));
   border: 1px solid rgba(236, 72, 153, 0.3);
   color: #f9a8d4;
@@ -305,7 +452,15 @@ body {
   color: #6ee7b7;
 }
 
-/* ── 时间胶囊封存动画 ── */
+[data-theme="light"] .tab-active-treehole {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #059669;
+}
+
+/* ═══════════════════════════════════════
+   时间胶囊封存动画
+   ═══════════════════════════════════════ */
 .capsule-sealed {
   animation: capsuleSeal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -321,15 +476,91 @@ body {
   }
 }
 
-/* ── 响应式优化 ── */
+/* ═══════════════════════════════════════
+   亮色主题：覆盖 Tailwind 暗色文本类
+   ═══════════════════════════════════════ */
+[data-theme="light"] .text-white\/90 { color: rgba(0, 0, 0, 0.92); }
+[data-theme="light"] .text-white\/80 { color: rgba(0, 0, 0, 0.85); }
+[data-theme="light"] .text-white\/70 { color: rgba(0, 0, 0, 0.75); }
+[data-theme="light"] .text-white\/60 { color: rgba(0, 0, 0, 0.65); }
+[data-theme="light"] .text-white\/50 { color: rgba(0, 0, 0, 0.55); }
+[data-theme="light"] .text-white\/40 { color: rgba(0, 0, 0, 0.5); }
+[data-theme="light"] .text-white\/30 { color: rgba(0, 0, 0, 0.4); }
+[data-theme="light"] .text-white\/25 { color: rgba(0, 0, 0, 0.35); }
+[data-theme="light"] .text-white\/20 { color: rgba(0, 0, 0, 0.3); }
+
+[data-theme="light"] .bg-white\/5 { background-color: rgba(0, 0, 0, 0.03); }
+[data-theme="light"] .bg-white\/4 { background-color: rgba(0, 0, 0, 0.02); }
+[data-theme="light"] .bg-white\/10 { background-color: rgba(0, 0, 0, 0.05); }
+[data-theme="light"] .bg-white\/\[0\.07\] { background-color: rgba(0, 0, 0, 0.04); }
+
+[data-theme="light"] .border-white\/10 { border-color: rgba(0, 0, 0, 0.08); }
+[data-theme="light"] .border-white\/8 { border-color: rgba(0, 0, 0, 0.08); }
+[data-theme="light"] .border-white\/15 { border-color: rgba(0, 0, 0, 0.12); }
+[data-theme="light"] .border-white\/20 { border-color: rgba(0, 0, 0, 0.15); }
+[data-theme="light"] .border-white\/5 { border-color: rgba(0, 0, 0, 0.05); }
+[data-theme="light"] .border-white\/30 { border-color: rgba(0, 0, 0, 0.2); }
+
+[data-theme="light"] .hover\:bg-white\/\[0\.07\]:hover { background-color: rgba(0, 0, 0, 0.05); }
+[data-theme="light"] .hover\:text-white\/50:hover { color: rgba(0, 0, 0, 0.7); }
+
+/* ═══════════════════════════════════════
+   主题切换按钮
+   ═══════════════════════════════════════ */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-card);
+}
+
+.theme-toggle:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.theme-toggle svg {
+  width: 20px;
+  height: 20px;
+  color: var(--text-primary);
+}
+
+/* ═══════════════════════════════════════
+   响应式
+   ═══════════════════════════════════════ */
 @media (max-width: 640px) {
   .aurora-orb {
     filter: blur(40px);
     opacity: 0.2;
   }
+  [data-theme="light"] .aurora-orb {
+    opacity: 0.4;
+  }
+  .theme-toggle {
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+  }
 }
 
-/* ── 减少动画（用户偏好） ── */
+/* ═══════════════════════════════════════
+   减少动画（用户偏好）
+   ═══════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;

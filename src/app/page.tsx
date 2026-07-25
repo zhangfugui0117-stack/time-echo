@@ -257,6 +257,28 @@ type Module = "home" | "future" | "wall" | "treehole";
 export default function Home() {
   const [activeModule, setActiveModule] = useState<Module>("home");
 
+  // ── 主题状态 ──
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+
+  // 初始化主题（从localStorage读取）
+  useEffect(() => {
+    const saved = localStorage.getItem("time-echo-theme") as "dark" | "light" | null;
+    if (saved) {
+      setTheme(saved);
+      document.documentElement.setAttribute("data-theme", saved);
+    } else {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+  }, []);
+
+  // 切换主题
+  const toggleTheme = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    document.documentElement.setAttribute("data-theme", next);
+    localStorage.setItem("time-echo-theme", next);
+  };
+
   // ── 给未来的自己 module state ──
   const [message, setMessage] = useState("");
   const [years, setYears] = useState("3");
@@ -416,6 +438,27 @@ export default function Home() {
 
   return (
     <div className="relative min-h-screen flex flex-col items-center px-5 py-8 md:py-14">
+      {/* 主题切换按钮 */}
+      <button
+        onClick={toggleTheme}
+        className="theme-toggle"
+        aria-label="切换主题"
+        title={theme === "dark" ? "切换到亮色" : "切换到深色"}
+      >
+        {theme === "dark" ? (
+          // 太阳图标（点击切换到亮色）
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+          </svg>
+        ) : (
+          // 月亮图标（点击切换到深色）
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        )}
+      </button>
+
       {/* 极光背景 */}
       <div className="aurora-bg">
         <div className="aurora-orb aurora-orb-1" />
